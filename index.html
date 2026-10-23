@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Férias do Valentim</title>
+<meta name="description" content="Contagem regressiva até as férias do Valentim, 14 de novembro.">
+<meta name="theme-color" content="#0f2a22">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M2 26 L10 14 L15 20 L21 8 L30 26 Z' fill='%23f2a541'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;800&family=Recursive:wght,CASL@400;600,0..1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --spruce: #0f2a22;
+    --moss: #1c3d31;
+    --lichen: #7fa27f;
+    --blaze: #f2a541;
+    --paper: #ece6d3;
+    --arcane: #a98be0;
+    --display: "Big Shoulders Display", Impact, sans-serif;
+    --body: "Recursive", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--spruce);
+    color: var(--paper);
+    font-family: var(--body);
+    font-variation-settings: "CASL" 0.6;
+    overflow-x: hidden;
+  }
+  #topo { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+  main {
+    position: relative;
+    min-height: 100svh;
+    display: grid;
+    grid-template-rows: 1fr auto auto;
+    justify-items: center;
+    padding: clamp(24px, 5vh, 56px) 16px clamp(16px, 3vh, 32px);
+    gap: clamp(20px, 4vh, 40px);
+  }
+  .hero { align-self: center; text-align: center; }
+  .hero h1 {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: clamp(1.6rem, 4.5vw, 3rem);
+    letter-spacing: 0.01em;
+    line-height: 1;
+    margin-bottom: 0.2em;
+  }
+  .hero p {
+    font-size: clamp(1rem, 2.2vw, 1.25rem);
+    color: var(--lichen);
+    margin-bottom: 0.5em;
+  }
+  .clock {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: clamp(8px, 2.5vw, 36px);
+    font-family: var(--display);
+    font-variant-numeric: tabular-nums;
+    line-height: 0.82;
+  }
+  .unit { display: grid; justify-items: center; }
+  .unit b {
+    font-weight: 800;
+    font-size: clamp(4.2rem, 17vw, 15rem);
+    letter-spacing: -0.01em;
+    text-shadow: 0 0 40px rgba(15, 42, 34, 0.9);
+  }
+  .unit.days b { color: var(--blaze); font-size: clamp(5.5rem, 24vw, 21rem); }
+  .unit span {
+    font-family: var(--body);
+    font-size: clamp(0.8rem, 1.6vw, 1rem);
+    color: var(--lichen);
+    margin-top: 0.6em;
+  }
+  .sep {
+    font-weight: 500;
+    font-size: clamp(3rem, 12vw, 10rem);
+    color: var(--moss);
+    -webkit-text-stroke: 1px var(--lichen);
+    align-self: center;
+  }
+  .clock .hms { display: flex; gap: clamp(18px, 3.2vw, 48px); align-items: flex-start; }
+
+  .workdays { text-align: center; max-width: 720px; }
+  .workdays h2 {
+    font-weight: 600;
+    font-size: clamp(1.15rem, 2.6vw, 1.6rem);
+    margin-bottom: 0.7em;
+  }
+  .workdays h2 strong { font-family: var(--display); font-weight: 800; font-size: 1.6em; color: var(--paper); margin-right: 0.15em; }
+  .pips { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; list-style: none; padding: 0; }
+  .pip {
+    width: 30px; height: 30px;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    border: 1.5px solid var(--lichen);
+    font-size: 0.68rem;
+    color: var(--lichen);
+    background: rgba(15, 42, 34, 0.8);
+  }
+  .pip.today {
+    border-color: var(--arcane);
+    color: var(--paper);
+    box-shadow: 0 0 0 4px rgba(169, 139, 224, 0.18), 0 0 18px rgba(169, 139, 224, 0.55);
+  }
+  .pip.week-gap { margin-left: 14px; }
+  .note { margin-top: 0.9em; font-size: 0.85rem; color: var(--lichen); }
+
+  .trail { width: min(980px, 100%); }
+  .trail svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .trail .ends { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--lichen); margin-top: 6px; }
+
+  .done .hero p { color: var(--blaze); }
+  @media (max-width: 560px) {
+    .clock { flex-direction: column; align-items: center; gap: 4px; }
+    .clock > .sep { display: none; }
+    .pip { width: 26px; height: 26px; }
+    .pip.week-gap { margin-left: 6px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="topo" aria-hidden="true"></canvas>
+<main id="app">
+  <section class="hero">
+    <h1 id="title">Contador de férias do Valentim</h1>
+    <p id="lead">Até 14 de novembro</p>
+    <div class="clock" role="timer" aria-live="off" aria-label="Tempo até as férias do Valentim">
+      <div class="unit days"><b id="d">--</b><span>dias</span></div>
+      <div class="sep">/</div>
+      <div class="hms">
+        <div class="unit"><b id="h">--</b><span>horas</span></div>
+        <div class="unit"><b id="m">--</b><span>min</span></div>
+        <div class="unit"><b id="s">--</b><span>seg</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="workdays">
+    <h2 id="wd-title"><strong id="wd">--</strong> dias úteis pela frente</h2>
+    <ol class="pips" id="pips"></ol>
+    <p class="note" id="wd-note">Contando hoje. Finados (2/11) não entra.</p>
+  </section>
+
+  <section class="trail" aria-label="Progresso até as férias">
+    <svg id="profile" viewBox="0 0 1000 120" preserveAspectRatio="none"></svg>
+    <div class="ends"><span>23 out, ponto de partida</span><span>14 nov, cume</span></div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const TARGET = new Date(2026, 10, 14, 0, 0, 0);   // 14 nov 2026, meia-noite local
+  const START  = new Date(2026, 9, 23, 0, 0, 0);    // dia em que o contador nasceu
+  const HOLIDAYS = ["2026-11-02"];                   // feriados nacionais no caminho
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const pad = n => String(n).padStart(2, "0");
+  const iso = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+
+  /* ---------- relógio ---------- */
+  const $ = id => document.getElementById(id);
+  function tick() {
+    const ms = TARGET - new Date();
+    if (ms <= 0) {
+      document.body.classList.add("done");
+      $("lead").textContent = "Férias, Valentim. Vai pedalar.";
+      ["d", "h", "m", "s"].forEach(k => $(k).textContent = "00");
+      return;
+    }
+    const t = Math.floor(ms / 1000);
+    $("d").textContent = pad(Math.floor(t / 86400));
+    $("h").textContent = pad(Math.floor(t / 3600) % 24);
+    $("m").textContent = pad(Math.floor(t / 60) % 60);
+    $("s").textContent = pad(t % 60);
+  }
+
+  /* ---------- dias úteis ---------- */
+  const WEEK = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
+  let lastDay = "";
+  function workdays() {
+    const now = new Date();
+    if (iso(now) === lastDay) return;
+    lastDay = iso(now);
+    const list = [];
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    while (d < TARGET) {
+      const wd = d.getDay();
+      if (wd !== 0 && wd !== 6 && !HOLIDAYS.includes(iso(d))) list.push(new Date(d));
+      d.setDate(d.getDate() + 1);
+    }
+    $("wd").textContent = list.length;
+    $("wd-title").lastChild.textContent = list.length === 1 ? " dia útil pela frente" : " dias úteis pela frente";
+    const ol = $("pips");
+    ol.innerHTML = "";
+    list.forEach((day, i) => {
+      const li = document.createElement("li");
+      li.className = "pip";
+      if (i === 0 && iso(day) === lastDay) li.classList.add("today");
+      if (i > 0 && day.getDay() < list[i - 1].getDay()) li.classList.add("week-gap");
+      li.textContent = day.getDate();
+      li.title = `${WEEK[day.getDay()]}, ${day.getDate()}/${day.getMonth() + 1}`;
+      ol.appendChild(li);
+    });
+    if (!list.length) $("wd-note").textContent = "Nenhum. Já era.";
+  }
+
+  /* ---------- perfil de elevação fractal (deslocamento do ponto médio) ---------- */
+  function seeded(seed) {
+    return () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+  }
+  const ridge = (() => {
+    const rnd = seeded(1411);
+    const N = 128, h = new Array(N + 1);
+    h[0] = 0.15; h[N] = 0.95;                 // sobe do vale até o cume
+    let step = N, amp = 0.8;
+    while (step > 1) {
+      const half = step / 2;
+      for (let i = half; i < N; i += step) h[i] = (h[i - half] + h[i + half]) / 2 + (rnd() - 0.5) * amp;
+      step = half; amp *= 0.6;
+    }
+    return h.map(v => Math.min(1, Math.max(0, v)));
+  })();
+  const ns = "http://www.w3.org/2000/svg";
+  const svg = $("profile");
+  const pts = ridge.map((v, i) => [i / (ridge.length - 1) * 1000, 110 - v * 95]);
+  const pathD = "M" + pts.map(p => p.map(n => n.toFixed(1)).join(",")).join(" L");
+  const el = (tag, attrs) => { const e = document.createElementNS(ns, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); svg.appendChild(e); return e; };
+  el("path", { d: pathD + " L1000,120 L0,120 Z", fill: "rgba(15,42,34,0.85)" });
+  el("path", { d: pathD, fill: "none", stroke: "#7fa27f", "stroke-width": 1.5, "stroke-dasharray": "2 5", "vector-effect": "non-scaling-stroke" });
+  const ridden = el("path", { d: pathD, fill: "none", stroke: "#f2a541", "stroke-width": 3, "stroke-linecap": "round", "vector-effect": "non-scaling-stroke" });
+  const summit = pts[pts.length - 1];
+  el("path", { d: `M${summit[0]},${summit[1]} V${summit[1] - 26} l14,6 l-14,6`, fill: "#f2a541", stroke: "#f2a541", "stroke-width": 2, "vector-effect": "non-scaling-stroke" });
+  const rider = el("circle", { r: 6, fill: "#ece6d3", stroke: "#0f2a22", "stroke-width": 2, "vector-effect": "non-scaling-stroke" });
+  const total = ridden.getTotalLength();
+  function progress() {
+    const p = Math.min(1, Math.max(0, (Date.now() - START) / (TARGET - START)));
+    ridden.setAttribute("stroke-dasharray", `${total * p} ${total}`);
+    const idx = Math.round(p * (pts.length - 1));
+    rider.setAttribute("cx", pts[idx][0]);
+    rider.setAttribute("cy", pts[idx][1]);
+    // o SVG estica na horizontal; mantém o ciclista redondo
+    const r = svg.getBoundingClientRect();
+    rider.setAttribute("transform", `translate(${pts[idx][0]} ${pts[idx][1]}) scale(${1000 / r.width * (r.height / 120)} 1) translate(${-pts[idx][0]} ${-pts[idx][1]})`);
+  }
+
+  /* ---------- mapa topográfico vivo: curvas de nível sobre ruído fBm ---------- */
+  const canvas = $("topo"), ctx = canvas.getContext("2d");
+  const perm = new Uint8Array(512);
+  { const r = seeded(77), p = [...Array(256).keys()];
+    for (let i = 255; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [p[i], p[j]] = [p[j], p[i]]; }
+    for (let i = 0; i < 512; i++) perm[i] = p[i & 255]; }
+  const fade = t => t * t * (3 - 2 * t);
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const hash = (x, y, z) => perm[(perm[(perm[x & 255] + y) & 255] + z) & 255] / 255;
+  function noise(x, y, z) {
+    const X = Math.floor(x), Y = Math.floor(y), Z = Math.floor(z);
+    const u = fade(x - X), v = fade(y - Y), w = fade(z - Z);
+    return lerp(
+      lerp(lerp(hash(X, Y, Z), hash(X + 1, Y, Z), u), lerp(hash(X, Y + 1, Z), hash(X + 1, Y + 1, Z), u), v),
+      lerp(lerp(hash(X, Y, Z + 1), hash(X + 1, Y, Z + 1), u), lerp(hash(X, Y + 1, Z + 1), hash(X + 1, Y + 1, Z + 1), u), v), w);
+  }
+  const fbm = (x, y, z) => { let s = 0, a = 0.5, f = 1; for (let o = 0; o < 4; o++) { s += a * noise(x * f, y * f, z * f); f *= 2.03; a *= 0.5; } return s; };
+
+  let W, H, cols, rows, cell, field;
+  function resize() {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cell = W < 600 ? 9 : 12;
+    cols = Math.ceil(W / cell) + 1; rows = Math.ceil(H / cell) + 1;
+    field = new Float32Array(cols * rows);
+  }
+  const LEVELS = 16;
+  function draw(t) {
+    const sc = 0.0042 * cell, z = t * 0.00004;
+    for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) field[j * cols + i] = fbm(i * sc, j * sc, z);
+    ctx.fillStyle = "#0f2a22"; ctx.fillRect(0, 0, W, H);
+    ctx.lineWidth = 1;
+    for (let l = 1; l < LEVELS; l++) {
+      const iso = 0.18 + l * (0.64 / LEVELS);
+      const index = l % 5 === 0;
+      ctx.strokeStyle = index ? "rgba(169,139,224,0.32)" : "rgba(127,162,127,0.16)";
+      ctx.lineWidth = index ? 1.4 : 1;
+      ctx.beginPath();
+      for (let j = 0; j < rows - 1; j++) for (let i = 0; i < cols - 1; i++) {
+        const a = field[j * cols + i], b = field[j * cols + i + 1], c = field[(j + 1) * cols + i + 1], d = field[(j + 1) * cols + i];
+        const k = (a > iso) | ((b > iso) << 1) | ((c > iso) << 2) | ((d > iso) << 3);
+        if (k === 0 || k === 15) continue;
+        const x = i * cell, y = j * cell;
+        const T = [x + cell * (iso - a) / (b - a), y], R = [x + cell, y + cell * (iso - b) / (c - b)];
+        const B = [x + cell * (iso - d) / (c - d), y + cell], L = [x, y + cell * (iso - a) / (d - a)];
+        const seg = (p, q) => { ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); };
+        switch (k) {
+          case 1: case 14: seg(L, T); break;
+          case 2: case 13: seg(T, R); break;
+          case 3: case 12: seg(L, R); break;
+          case 4: case 11: seg(R, B); break;
+          case 6: case 9: seg(T, B); break;
+          case 7: case 8: seg(L, B); break;
+          case 5: seg(L, T); seg(R, B); break;
+          case 10: seg(T, R); seg(L, B); break;
+        }
+      }
+      ctx.stroke();
+    }
+    // vinheta para o número respirar
+    const g = ctx.createRadialGradient(W / 2, H * 0.4, 0, W / 2, H * 0.4, Math.max(W, H) * 0.6);
+    g.addColorStop(0, "rgba(15,42,34,0.55)"); g.addColorStop(1, "rgba(15,42,34,0)");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  }
+
+  let last = 0;
+  function loop(t) {
+    if (t - last > 50) { draw(t); last = t; }   // ~20 fps basta para algo que se move devagar
+    requestAnimationFrame(loop);
+  }
+
+  resize();
+  addEventListener("resize", () => { resize(); draw(performance.now()); progress(); });
+  tick(); workdays(); progress();
+  setInterval(() => { tick(); workdays(); progress(); }, 1000);
+  if (reduceMotion) draw(0); else requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
