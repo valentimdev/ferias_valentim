@@ -9,7 +9,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M2 26 L10 14 L15 20 L21 8 L30 26 Z' fill='%23f2a541'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;800&family=Recursive:wght,CASL@400;600,0..1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&family=Alegreya+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --spruce: #0f2a22;
@@ -18,8 +18,8 @@
     --blaze: #f2a541;
     --paper: #ece6d3;
     --arcane: #a98be0;
-    --display: "Big Shoulders Display", Impact, sans-serif;
-    --body: "Recursive", system-ui, sans-serif;
+    --display: "Rubik Dirt", Impact, sans-serif;
+    --body: "Alegreya Sans", system-ui, sans-serif;
   }
   * { box-sizing: border-box; margin: 0; }
   html, body { height: 100%; }
@@ -27,7 +27,6 @@
     background: var(--spruce);
     color: var(--paper);
     font-family: var(--body);
-    font-variation-settings: "CASL" 0.6;
     overflow-x: hidden;
   }
   #topo { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
@@ -43,7 +42,7 @@
   .hero { align-self: center; text-align: center; }
   .hero h1 {
     font-family: var(--display);
-    font-weight: 500;
+    font-weight: 400;
     font-size: clamp(1.6rem, 4.5vw, 3rem);
     letter-spacing: 0.01em;
     line-height: 1;
@@ -65,12 +64,14 @@
   }
   .unit { display: grid; justify-items: center; }
   .unit b {
-    font-weight: 800;
-    font-size: clamp(4.2rem, 17vw, 15rem);
+    display: block;
+    text-align: end;              /* largura fixa via JS + alinhamento no fim: os dígitos trocam sem empurrar nada */
+    font-weight: 400;
+    font-size: clamp(3.6rem, 12vw, 11rem);
     letter-spacing: -0.01em;
-    text-shadow: 0 0 40px rgba(15, 42, 34, 0.9);
+    text-shadow: 0 0 30px rgba(10, 28, 22, 0.95), 0 0 80px rgba(10, 28, 22, 0.8);
   }
-  .unit.days b { color: var(--blaze); font-size: clamp(5.5rem, 24vw, 21rem); }
+  .unit.days b { color: var(--blaze); font-size: clamp(5rem, 18vw, 16rem); }
   .unit span {
     font-family: var(--body);
     font-size: clamp(0.8rem, 1.6vw, 1rem);
@@ -84,36 +85,40 @@
     -webkit-text-stroke: 1px var(--lichen);
     align-self: center;
   }
-  .clock .hms { display: flex; gap: clamp(18px, 3.2vw, 48px); align-items: flex-start; }
+  .clock .hms { display: flex; gap: clamp(18px, 3.2vw, 48px); align-items: flex-start; justify-content: flex-end; }
 
   .workdays { text-align: center; max-width: 720px; }
   .workdays h2 {
-    font-weight: 600;
-    font-size: clamp(1.15rem, 2.6vw, 1.6rem);
+    font-weight: 500;
+    font-size: clamp(1.25rem, 2.8vw, 1.75rem);
     margin-bottom: 0.7em;
   }
-  .workdays h2 strong { font-family: var(--display); font-weight: 800; font-size: 1.6em; color: var(--paper); margin-right: 0.15em; }
+  .workdays h2 strong { font-family: var(--display); font-weight: 400; font-size: 1.6em; color: var(--paper); margin-right: 0.15em; }
   .pips { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; list-style: none; padding: 0; }
   .pip {
     width: 30px; height: 30px;
     display: grid; place-items: center;
     border-radius: 50%;
     border: 1.5px solid var(--lichen);
-    font-size: 0.68rem;
+    font-size: 0.82rem;
     color: var(--lichen);
     background: rgba(15, 42, 34, 0.8);
   }
+  .pip { transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s; }
+  .pip:hover { transform: scale(1.25) rotate(-8deg); border-color: var(--blaze); color: var(--paper); box-shadow: 0 0 16px rgba(242, 165, 65, 0.6); }
+  .hero p, .unit span, .note, .trail .ends, .workdays h2 { color: #dfe8d6; text-shadow: 0 1px 2px rgba(10, 28, 22, 1), 0 0 14px rgba(10, 28, 22, 0.95); }
+  @media (prefers-reduced-motion: reduce) { .pip, .pip:hover { transition: none; transform: none; } }
   .pip.today {
     border-color: var(--arcane);
     color: var(--paper);
     box-shadow: 0 0 0 4px rgba(169, 139, 224, 0.18), 0 0 18px rgba(169, 139, 224, 0.55);
   }
   .pip.week-gap { margin-left: 14px; }
-  .note { margin-top: 0.9em; font-size: 0.85rem; color: var(--lichen); }
+  .note { margin-top: 0.9em; font-size: 1rem; }
 
   .trail { width: min(980px, 100%); }
   .trail svg { width: 100%; height: auto; display: block; overflow: visible; }
-  .trail .ends { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--lichen); margin-top: 6px; }
+  .trail .ends { display: flex; justify-content: space-between; font-size: 0.95rem; margin-top: 6px; }
 
   .done .hero p { color: var(--blaze); }
   @media (max-width: 560px) {
@@ -148,7 +153,7 @@
   </section>
 
   <section class="trail" aria-label="Progresso até as férias">
-    <svg id="profile" viewBox="0 0 1000 120" preserveAspectRatio="none"></svg>
+    <svg id="profile" viewBox="0 0 1000 220"></svg>
     <div class="ends"><span>23 out, ponto de partida</span><span>14 nov, cume</span></div>
   </section>
 </main>
@@ -178,6 +183,21 @@
     $("h").textContent = pad(Math.floor(t / 3600) % 24);
     $("m").textContent = pad(Math.floor(t / 60) % 60);
     $("s").textContent = pad(t % 60);
+  }
+
+  // cada bloco de dígitos ganha a largura do par mais largo ("00".."99"),
+  // assim a troca de número não faz o contador nem o resto da página dançar
+  function lockDigitWidths() {
+    ["d", "h", "m", "s"].forEach(k => {
+      const b = $(k), probe = b.cloneNode();
+      probe.removeAttribute("id");
+      probe.style.cssText = "position:absolute;visibility:hidden;width:auto";
+      b.parentNode.appendChild(probe);
+      let max = 0;
+      for (let n = 0; n < 100; n++) { probe.textContent = pad(n); max = Math.max(max, probe.getBoundingClientRect().width); }
+      probe.remove();
+      b.style.width = Math.ceil(max) + "px";
+    });
   }
 
   /* ---------- dias úteis ---------- */
@@ -217,116 +237,232 @@
   const ridge = (() => {
     const rnd = seeded(1411);
     const N = 128, h = new Array(N + 1);
-    h[0] = 0.15; h[N] = 0.95;                 // sobe do vale até o cume
-    let step = N, amp = 0.8;
+    h[0] = 0.04; h[N] = 1;                    // sobe do vale até o cume
+    let step = N, amp = 0.32;
     while (step > 1) {
       const half = step / 2;
       for (let i = half; i < N; i += step) h[i] = (h[i - half] + h[i + half]) / 2 + (rnd() - 0.5) * amp;
-      step = half; amp *= 0.6;
+      step = half; amp *= 0.58;
     }
-    return h.map(v => Math.min(1, Math.max(0, v)));
+    return h.map((v, i) => Math.min(1, Math.max(0, v * (0.55 + 0.45 * (i / N) ** 1.6))));  // fica mais íngreme perto do topo
   })();
   const ns = "http://www.w3.org/2000/svg";
   const svg = $("profile");
-  const pts = ridge.map((v, i) => [i / (ridge.length - 1) * 1000, 110 - v * 95]);
-  const pathD = "M" + pts.map(p => p.map(n => n.toFixed(1)).join(",")).join(" L");
-  const el = (tag, attrs) => { const e = document.createElementNS(ns, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); svg.appendChild(e); return e; };
-  el("path", { d: pathD + " L1000,120 L0,120 Z", fill: "rgba(15,42,34,0.85)" });
+  const VH = 220;
+  const toPts = (arr, base, height) => arr.map((v, i) => [i / (arr.length - 1) * 1000, base - v * height]);
+  const line = p => "M" + p.map(q => q.map(n => n.toFixed(1)).join(",")).join(" L");
+  const pts = toPts(ridge, 212, 180);
+  const pathD = line(pts);
+  const el = (tag, attrs, parent = svg) => { const e = document.createElementNS(ns, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+  el("path", { d: pathD + ` L1000,${VH} L0,${VH} Z`, fill: "rgba(15,42,34,0.9)" });
   el("path", { d: pathD, fill: "none", stroke: "#7fa27f", "stroke-width": 1.5, "stroke-dasharray": "2 5", "vector-effect": "non-scaling-stroke" });
   const ridden = el("path", { d: pathD, fill: "none", stroke: "#f2a541", "stroke-width": 3, "stroke-linecap": "round", "vector-effect": "non-scaling-stroke" });
   const summit = pts[pts.length - 1];
-  el("path", { d: `M${summit[0]},${summit[1]} V${summit[1] - 26} l14,6 l-14,6`, fill: "#f2a541", stroke: "#f2a541", "stroke-width": 2, "vector-effect": "non-scaling-stroke" });
-  const rider = el("circle", { r: 6, fill: "#ece6d3", stroke: "#0f2a22", "stroke-width": 2, "vector-effect": "non-scaling-stroke" });
+  el("path", { d: `M${summit[0]},${summit[1]} V${summit[1] - 34} l18,7 l-18,7`, fill: "#f2a541", stroke: "#f2a541", "stroke-width": 2, "stroke-linejoin": "round", "vector-effect": "non-scaling-stroke" });
+
+  /* ---------- o bonequinho trilheiro ---------- */
+  const hiker = el("g", { stroke: "#ece6d3", "stroke-width": 2.4, "stroke-linecap": "round", "stroke-linejoin": "round", fill: "none" });
+  const pack  = el("rect", { x: -9.5, y: -27, width: 6, height: 10, rx: 2, fill: "#a98be0", stroke: "none" }, hiker);
+  const legB  = el("polyline", {}, hiker), armB = el("polyline", {}, hiker);
+  const torso = el("line", {}, hiker);
+  const legF  = el("polyline", {}, hiker), armF = el("polyline", {}, hiker);
+  const pole  = el("line", { stroke: "#f2a541", "stroke-width": 1.6 }, hiker);
+  const head  = el("circle", { r: 4.2, fill: "#ece6d3", stroke: "none" }, hiker);
+  [legB, armB].forEach(e => e.setAttribute("opacity", 0.55));
+
   const total = ridden.getTotalLength();
-  function progress() {
-    const p = Math.min(1, Math.max(0, (Date.now() - START) / (TARGET - START)));
+  const target = () => Math.min(1, Math.max(0, (Date.now() - START) / (TARGET - START)));
+  let shown = reduceMotion ? target() : 0;     // ao abrir, ele sobe do ponto de partida até onde você está
+  let pxScale = 1;
+  function measure() { pxScale = 1000 / svg.getBoundingClientRect().width; }
+
+  // pose de caminhada em coordenadas locais (pés no chão em y=0, de frente para a direita, subindo)
+  function pose(phase) {
+    const bob = Math.abs(Math.sin(phase)) * 1.2;
+    const hip = [0, -13 + bob], neck = [2.6, -25 + bob];
+    const leg = s => {
+      const a = Math.sin(phase + s) * 0.6;                       // ângulo da coxa
+      const knee = [hip[0] + Math.sin(a) * 7, hip[1] + Math.cos(a) * 7];
+      const lift = Math.max(0, Math.cos(phase + s)) * 3;
+      return [hip, knee, [knee[0] + Math.sin(a * 0.4) * 6 + 1, Math.min(0, knee[1] + 6.5 - lift)]];
+    };
+    const arm = s => {
+      const a = Math.sin(phase + s) * 0.7;
+      const elbow = [neck[0] + Math.sin(a) * 6, neck[1] + 2 + Math.cos(a) * 6];
+      return [neck, elbow, [elbow[0] + 4.5, elbow[1] + 3]];
+    };
+    const pts2 = p => p.map(q => q.map(n => n.toFixed(2)).join(",")).join(" ");
+    legF.setAttribute("points", pts2(leg(0)));   legB.setAttribute("points", pts2(leg(Math.PI)));
+    const af = arm(Math.PI), ab = arm(0);
+    armF.setAttribute("points", pts2(af));       armB.setAttribute("points", pts2(ab));
+    torso.setAttribute("x1", hip[0]); torso.setAttribute("y1", hip[1]);
+    torso.setAttribute("x2", neck[0]); torso.setAttribute("y2", neck[1]);
+    head.setAttribute("cx", neck[0] + 1.6); head.setAttribute("cy", neck[1] - 5);
+    pack.setAttribute("transform", `translate(0 ${bob})`);
+    const hand = af[2];
+    pole.setAttribute("x1", hand[0]); pole.setAttribute("y1", hand[1] - 3);
+    pole.setAttribute("x2", hand[0] + 2.5); pole.setAttribute("y2", 0);
+  }
+
+  function placeHiker(p, phase) {
     ridden.setAttribute("stroke-dasharray", `${total * p} ${total}`);
-    const idx = Math.round(p * (pts.length - 1));
-    rider.setAttribute("cx", pts[idx][0]);
-    rider.setAttribute("cy", pts[idx][1]);
-    // o SVG estica na horizontal; mantém o ciclista redondo
-    const r = svg.getBoundingClientRect();
-    rider.setAttribute("transform", `translate(${pts[idx][0]} ${pts[idx][1]}) scale(${1000 / r.width * (r.height / 120)} 1) translate(${-pts[idx][0]} ${-pts[idx][1]})`);
+    const at = ridden.getPointAtLength(total * p);
+    const ahead = ridden.getPointAtLength(Math.min(total, total * p + 6));
+    const slope = Math.atan2(ahead.y - at.y, ahead.x - at.x) * 180 / Math.PI;
+    const k = pxScale * (innerWidth < 600 ? 1.1 : 1.6);     // mantém o boneco com tamanho legível em qualquer tela
+    hiker.setAttribute("transform", `translate(${at.x.toFixed(1)} ${at.y.toFixed(1)}) rotate(${(slope * 0.25).toFixed(1)}) scale(${k.toFixed(3)})`);
+    pose(phase);
   }
 
-  /* ---------- mapa topográfico vivo: curvas de nível sobre ruído fBm ---------- */
-  const canvas = $("topo"), ctx = canvas.getContext("2d");
-  const perm = new Uint8Array(512);
-  { const r = seeded(77), p = [...Array(256).keys()];
-    for (let i = 255; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [p[i], p[j]] = [p[j], p[i]]; }
-    for (let i = 0; i < 512; i++) perm[i] = p[i & 255]; }
-  const fade = t => t * t * (3 - 2 * t);
-  const lerp = (a, b, t) => a + (b - a) * t;
-  const hash = (x, y, z) => perm[(perm[(perm[x & 255] + y) & 255] + z) & 255] / 255;
-  function noise(x, y, z) {
-    const X = Math.floor(x), Y = Math.floor(y), Z = Math.floor(z);
-    const u = fade(x - X), v = fade(y - Y), w = fade(z - Z);
-    return lerp(
-      lerp(lerp(hash(X, Y, Z), hash(X + 1, Y, Z), u), lerp(hash(X, Y + 1, Z), hash(X + 1, Y + 1, Z), u), v),
-      lerp(lerp(hash(X, Y, Z + 1), hash(X + 1, Y, Z + 1), u), lerp(hash(X, Y + 1, Z + 1), hash(X + 1, Y + 1, Z + 1), u), v), w);
+  let walkT = 0, lastFrame = 0;
+  function walk(t) {
+    const dt = Math.min(64, t - (lastFrame || t)); lastFrame = t;
+    const goal = target();
+    const climbing = shown < goal - 0.0005;
+    if (climbing) shown = Math.min(goal, shown + dt * 0.00012 + (goal - shown) * dt * 0.0012);
+    walkT += dt * (climbing ? 0.012 : 0.006);               // passo rápido na subida, passada calma depois
+    placeHiker(shown, walkT);
+    requestAnimationFrame(walk);
   }
-  const fbm = (x, y, z) => { let s = 0, a = 0.5, f = 1; for (let o = 0; o < 4; o++) { s += a * noise(x * f, y * f, z * f); f *= 2.03; a *= 0.5; } return s; };
+  function progress() { if (reduceMotion) { shown = target(); placeHiker(shown, 0.6); } }
 
-  let W, H, cols, rows, cell, field;
-  function resize() {
-    const dpr = Math.min(devicePixelRatio || 1, 2);
-    W = innerWidth; H = innerHeight;
-    canvas.width = W * dpr; canvas.height = H * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    cell = W < 600 ? 9 : 12;
-    cols = Math.ceil(W / cell) + 1; rows = Math.ceil(H / cell) + 1;
-    field = new Float32Array(cols * rows);
-  }
-  const LEVELS = 16;
-  function draw(t) {
-    const sc = 0.0042 * cell, z = t * 0.00004;
-    for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) field[j * cols + i] = fbm(i * sc, j * sc, z);
-    ctx.fillStyle = "#0f2a22"; ctx.fillRect(0, 0, W, H);
-    ctx.lineWidth = 1;
-    for (let l = 1; l < LEVELS; l++) {
-      const iso = 0.18 + l * (0.64 / LEVELS);
-      const index = l % 5 === 0;
-      ctx.strokeStyle = index ? "rgba(169,139,224,0.32)" : "rgba(127,162,127,0.16)";
-      ctx.lineWidth = index ? 1.4 : 1;
-      ctx.beginPath();
-      for (let j = 0; j < rows - 1; j++) for (let i = 0; i < cols - 1; i++) {
-        const a = field[j * cols + i], b = field[j * cols + i + 1], c = field[(j + 1) * cols + i + 1], d = field[(j + 1) * cols + i];
-        const k = (a > iso) | ((b > iso) << 1) | ((c > iso) << 2) | ((d > iso) << 3);
-        if (k === 0 || k === 15) continue;
-        const x = i * cell, y = j * cell;
-        const T = [x + cell * (iso - a) / (b - a), y], R = [x + cell, y + cell * (iso - b) / (c - b)];
-        const B = [x + cell * (iso - d) / (c - d), y + cell], L = [x, y + cell * (iso - a) / (d - a)];
-        const seg = (p, q) => { ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); };
-        switch (k) {
-          case 1: case 14: seg(L, T); break;
-          case 2: case 13: seg(T, R); break;
-          case 3: case 12: seg(L, R); break;
-          case 4: case 11: seg(R, B); break;
-          case 6: case 9: seg(T, B); break;
-          case 7: case 8: seg(L, B); break;
-          case 5: seg(L, T); seg(R, B); break;
-          case 10: seg(T, R); seg(L, B); break;
-        }
-      }
-      ctx.stroke();
+  /* ---------- fractal psicodélico (WebGL): domínio deformado em fBm + conjunto de Julia,
+                com curvas de nível de mapa por cima. O mouse torce o espaço; clique solta ondas ---------- */
+  const canvas = $("topo");
+  const gl = canvas.getContext("webgl", { antialias: false, premultipliedAlpha: false });
+  const FRAG = `
+precision highp float;
+uniform vec2 uRes; uniform float uTime; uniform vec2 uMouse; uniform float uEnergy;
+uniform vec3 uRip[4];
+float hash(vec2 p){ p = fract(p*vec2(123.34, 456.21)); p += dot(p, p+45.32); return fract(p.x*p.y); }
+float noise(vec2 p){
+  vec2 i = floor(p), f = fract(p); vec2 u = f*f*(3.0-2.0*f);
+  return mix(mix(hash(i), hash(i+vec2(1,0)), u.x), mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), u.x), u.y);
+}
+float fbm(vec2 p){
+  float s = 0.0, a = 0.5;
+  mat2 r = mat2(0.8, -0.6, 0.6, 0.8);
+  for (int i = 0; i < 5; i++){ s += a*noise(p); p = r*p*2.03 + 1.7; a *= 0.5; }
+  return s;
+}
+vec3 pal(float t){ return vec3(0.55, 0.4, 0.5) + vec3(0.45, 0.4, 0.5)*cos(6.28318*(t + vec3(0.0, 0.2, 0.45))); }
+mat2 rot(float a){ float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
+void main(){
+  vec2 uv = gl_FragCoord.xy / uRes;
+  vec2 p = (gl_FragCoord.xy - 0.5*uRes) / uRes.y;
+  vec2 m = (uMouse - 0.5) * vec2(uRes.x/uRes.y, 1.0);
+  float t = uTime;
+
+  // redemoinho em volta do cursor, mais forte quanto mais rápido o mouse anda
+  vec2 d = p - m; float r = length(d);
+  p = m + rot((1.2 + uEnergy*5.0) * exp(-r*3.5)) * d;
+
+  // ondas de clique
+  for (int i = 0; i < 4; i++){
+    float age = t - uRip[i].z;
+    if (age > 0.0 && age < 4.0){
+      vec2 dd = p - uRip[i].xy; float rr = length(dd);
+      float w = sin(rr*38.0 - age*14.0) * exp(-age*1.2) * exp(-abs(rr - age*0.55)*7.0);
+      p += normalize(dd + 1e-4) * w * 0.05;
     }
-    // vinheta para o número respirar
-    const g = ctx.createRadialGradient(W / 2, H * 0.4, 0, W / 2, H * 0.4, Math.max(W, H) * 0.6);
-    g.addColorStop(0, "rgba(15,42,34,0.55)"); g.addColorStop(1, "rgba(15,42,34,0)");
-    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
   }
 
-  let last = 0;
-  function loop(t) {
-    if (t - last > 50) { draw(t); last = t; }   // ~20 fps basta para algo que se move devagar
-    requestAnimationFrame(loop);
+  // deformação de domínio em camadas (o "respirar" do fractal)
+  vec2 q = vec2(fbm(p*1.6 + t*0.06), fbm(p*1.6 + vec2(5.2, 1.3) - t*0.05));
+  vec2 w = vec2(fbm(p*1.6 + 4.0*q + vec2(1.7, 9.2) + t*0.12), fbm(p*1.6 + 4.0*q + vec2(8.3, 2.8) - t*0.09));
+  float f = fbm(p*1.6 + 4.0*w);
+
+  // Julia com armadilha de órbita; a constante passeia com o mouse
+  vec2 z = p*1.25 + (w - 0.5)*0.35;
+  vec2 c = vec2(-0.78, 0.15) + (uMouse - 0.5)*vec2(0.22, 0.3) + 0.04*vec2(sin(t*0.21), cos(t*0.17));
+  float trap = 10.0;
+  for (int i = 0; i < 40; i++){
+    z = vec2(z.x*z.x - z.y*z.y, 2.0*z.x*z.y) + c;
+    trap = min(trap, abs(length(z) - 0.45) + 0.2*abs(z.x*z.y));
+    if (dot(z, z) > 16.0) break;
+  }
+  float v = f + 0.45*exp(-trap*5.0);
+
+  vec3 col = pal(v*1.6 + length(q)*0.8 + t*0.04 + uEnergy*0.6);
+  col = mix(col, pal(v*2.3 - t*0.03 + 0.5), 0.35*smoothstep(0.3, 0.9, w.x));
+  col *= 0.35 + 0.9*f;
+
+  // curvas de nível do mapa de trilha, desenhadas por cima do fractal
+  float fv = fract(v*14.0);
+  float iso = smoothstep(0.07, 0.0, min(fv, 1.0 - fv));
+  float major = smoothstep(0.03, 0.0, abs(fract(v*14.0/5.0) - 0.5) - 0.47);
+  col = mix(col, vec3(0.93, 0.9, 0.83), iso*0.3 + major*iso*0.35);
+
+  // brilho no cursor
+  col += pal(t*0.2 + r) * exp(-r*9.0) * (0.25 + uEnergy*0.8);
+
+  // escurece o centro e o pé da tela para o contador continuar legível
+  float hold = exp(-pow(length((uv - vec2(0.5, 0.66))*vec2(1.3, 2.4)), 2.0)*2.2);
+  col = mix(col, vec3(0.06, 0.16, 0.13), 0.68*hold + 0.3*smoothstep(0.35, 0.0, uv.y));
+  col = mix(vec3(0.06, 0.16, 0.13), col, 0.85);
+  gl_FragColor = vec4(col, 1.0);
+}`;
+  const VERT = "attribute vec2 a; void main(){ gl_Position = vec4(a, 0.0, 1.0); }";
+  let U = {}, ok = false;
+  if (gl) {
+    const sh = (type, src) => { const o = gl.createShader(type); gl.shaderSource(o, src); gl.compileShader(o);
+      if (!gl.getShaderParameter(o, gl.COMPILE_STATUS)) console.error(gl.getShaderInfoLog(o)); return o; };
+    const prog = gl.createProgram();
+    gl.attachShader(prog, sh(gl.VERTEX_SHADER, VERT)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FRAG));
+    gl.linkProgram(prog);
+    ok = gl.getProgramParameter(prog, gl.LINK_STATUS);
+    if (ok) {
+      gl.useProgram(prog);
+      gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+      const loc = gl.getAttribLocation(prog, "a");
+      gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+      ["uRes", "uTime", "uMouse", "uEnergy", "uRip"].forEach(n => U[n] = gl.getUniformLocation(prog, n));
+    }
   }
 
-  resize();
-  addEventListener("resize", () => { resize(); draw(performance.now()); progress(); });
-  tick(); workdays(); progress();
+  // estado do mouse: posição suavizada, "energia" que sobe com a velocidade e decai sozinha
+  const mouse = { x: 0.5, y: 0.5, tx: 0.5, ty: 0.5, energy: 0 };
+  const ripples = new Float32Array(12).fill(-99);
+  let ripIdx = 0, clock0 = performance.now();
+  const now = () => (performance.now() - clock0) / 1000;
+  addEventListener("pointermove", e => {
+    const nx = e.clientX / innerWidth, ny = 1 - e.clientY / innerHeight;
+    mouse.energy = Math.min(1, mouse.energy + Math.hypot(nx - mouse.tx, ny - mouse.ty) * 3);
+    mouse.tx = nx; mouse.ty = ny;
+  });
+  addEventListener("pointerdown", e => {
+    const ar = innerWidth / innerHeight;
+    ripples.set([(e.clientX / innerWidth - 0.5) * ar, (0.5 - e.clientY / innerHeight), now()], ripIdx * 3);
+    ripIdx = (ripIdx + 1) % 4;
+    mouse.energy = 1;
+  });
+
+  const RENDER_SCALE = 0.6;                    // renderiza menor e estica: fica suave e leve na GPU
+  function resize() {
+    canvas.width = Math.round(innerWidth * RENDER_SCALE);
+    canvas.height = Math.round(innerHeight * RENDER_SCALE);
+    if (ok) gl.viewport(0, 0, canvas.width, canvas.height);
+  }
+  function draw() {
+    if (!ok) return;
+    mouse.x += (mouse.tx - mouse.x) * 0.08; mouse.y += (mouse.ty - mouse.y) * 0.08;
+    mouse.energy *= 0.965;
+    gl.uniform2f(U.uRes, canvas.width, canvas.height);
+    gl.uniform1f(U.uTime, reduceMotion ? 12 : now());
+    gl.uniform2f(U.uMouse, mouse.x, mouse.y);
+    gl.uniform1f(U.uEnergy, mouse.energy);
+    gl.uniform3fv(U.uRip, ripples);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+  }
+  function loop() { draw(); requestAnimationFrame(loop); }
+
+  resize(); measure();
+  addEventListener("resize", () => { resize(); measure(); lockDigitWidths(); draw(); progress(); });
+  tick(); workdays(); lockDigitWidths(); progress();
+  document.fonts.ready.then(lockDigitWidths);
   setInterval(() => { tick(); workdays(); progress(); }, 1000);
-  if (reduceMotion) draw(0); else requestAnimationFrame(loop);
+  if (reduceMotion) draw(); else { requestAnimationFrame(loop); requestAnimationFrame(walk); }
 })();
 </script>
 </body>
